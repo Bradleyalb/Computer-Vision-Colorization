@@ -7,13 +7,14 @@ from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
 import time
 # You might not have tqdm, which gives you nice progress bars
-!pip install tqdm
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 import os
 import copy
 
+data_dir = "./tiny-imagenet-200"
 # Detect if we have a GPU available
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+#device = torch.device("cpu")
 if torch.cuda.is_available():
     print("Using the GPU!")
 else:
@@ -43,13 +44,13 @@ def initialize_model(model_name, num_classes, resume_from = None):
         model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
-    if model_name == "resnet34":
+    elif model_name == "resnet34":
         model_ft = models.resnet34(pretrained=use_pretrained)
         num_ftrs = model_ft.fc.in_features
         model_ft.fc = nn.Linear(num_ftrs, num_classes)
         input_size = 224
 
-    if model_name == "resnet50":
+    elif model_name == "resnet50":
         model_ft = models.resnet50(pretrained=use_pretrained)
         num_ftrs = model_ft.fc.in_features
         model_ft.fc = nn.Linear(num_ftrs, num_classes)
@@ -106,7 +107,7 @@ def get_dataloaders(input_size, batch_size, shuffle = True):
     # are derived from aggregating lots of data and happen to produce better results.
     data_transforms = {
         'train': transforms.Compose([
-            torchvision.transforms.Grayscale(num_output_channels=3)
+            #transforms.Grayscale(num_output_channels=3),
             transforms.Resize(input_size),
             transforms.CenterCrop(input_size),
             transforms.ToTensor(),
@@ -248,17 +249,17 @@ model_name = "resnet"
 
 # Number of classes in the dataset
 # Miniplaces has 100
-num_classes = 100
+num_classes = 200
 
 # Batch size for training (change depending on how much memory you have)
 # You should use a power of 2.
-batch_size = 8
+batch_size = 64
 
 # Shuffle the input data?
 shuffle_datasets = True
 
 # Number of epochs to train for 
-num_epochs = 10
+num_epochs = 1
 
 ### IO
 # Path to a model file to use to start weights at
@@ -354,4 +355,4 @@ val_loss, val_top1, val_top5, val_labels = evaluate(model, dataloaders['val'], c
 
 # Get predictions for the test set
 _, _, _, test_labels = evaluate(model, dataloaders['test'], criterion, is_labelled = False, generate_labels = True, k = 5)
-print(val_loss,val_top1,val_top5,val_labels)
+print(val_loss,val_top1,val_top5)
