@@ -19,7 +19,7 @@ from skimage import data
 from skimage.color import rgb2lab, lab2lch, lab2rgb
 
 data_dir = "./imagenet_data"
-
+data_dir = "./small_test_data"
 
 MAX_ITER = float("inf")
 
@@ -100,10 +100,10 @@ def initialize_colorization_model(k,classification_feature_size):
       nn.Softmax2d()
     )
 
-max_value = 70
-min_value = -70
+max_value = 75
+min_value = -75
 lab_range = max_value-min_value
-block_size = 7
+block_size = 12 
 number_lab_classes = (lab_range//block_size+1)**2
 
 def quantizeLAB(a,b,block_size):
@@ -142,8 +142,8 @@ def to_one_hot(indexes,n_classes):
     return one_hot
 
 def post_processing_one_hot(orig,output,criterion):
-    lab_one_hot = convert_one_hot(orig)    
-    return criterion(output, torch.tensor(lab_one_hot).long())
+    lab_one_hot = torch.tensor(convert_one_hot(orig.cpu())).to(device)    
+    return criterion(output,lab_one_hot.long())
 
 def post_processing(orig,output,criterion):
     #one_hot_orig = convert_one_hot(orig)
@@ -335,6 +335,7 @@ def train_model(device,model_name ,classification_model,colorization_model, data
         print()
         for inputs, _ in tqdm(dataloaders['example']):
             gray = transforms.Grayscale(num_output_channels=3)(inputs)
+            inputs = inputs.to(device)
             outputs = forwards(inputs, classification_model, colorization_model)
             outputs = outputs.cpu().detach().numpy()
             inputs = inputs.cpu().detach().numpy()
@@ -486,8 +487,8 @@ if __name__ == '__main__':
     shuffle_datasets = True
     save_dir = "weights"
     os.makedirs(save_dir, exist_ok=True)
-    data_dir = './small_test_data'
-    
+    data_dir = './tiny-imagenet-200'
+    #data_dir = "./small_test_data"    
     save_all_epochs = False
 
     #print(scheduler)
@@ -496,9 +497,9 @@ if __name__ == '__main__':
       start_time = time.perf_counter()
       
       model_name = "resnet" #row["Model Name"]
-      batch_size = 8 #row["Batch Size"]
+      batch_size = 32 #row["Batch Size"]
       num_epochs = 20 #row["Num Epochs"]
-      save_file = "onehot_cross_entropy_block_size_7_adam"#row["Network Name"]
+      save_file = "imageNet_onehot_cross_entropy_block_size_11_adam"#row["Network Name"]
       resume_from = None #row["Resume From"]
       k = 25
 
