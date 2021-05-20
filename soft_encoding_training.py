@@ -151,14 +151,14 @@ def get_dataloaders(device,input_size, batch_size, shuffle = True, mirror_data= 
     }
     data_transforms['train'] = transforms.Compose(data_transforms['train'])
 
-    #image_datasets = getRandomDataSets(data_transforms)
-    image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in data_transforms.keys()}
+    image_datasets = getRandomDataSets(data_transforms)
+    #image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in data_transforms.keys()}
 
     dataloaders_dict = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=batch_size, shuffle=False if x != 'train' else shuffle, num_workers=4) for x in data_transforms.keys()}
     return dataloaders_dict
 
 def getRandomDataSets():
-    train,val = random_split(datasets.ImageFolder("data",data_transforms["train"],[33743,7257],generator=torch.Generator().manual_seed(42)))
+    train,val = random_split(datasets.ImageFolder("data",data_transforms["train"],[850,150]),generator=torch.Generator().manual_seed(42))
     image_datasets['train'] = train
     image_datasets['val'] = val
     image_datasets['example'] = datasets.ImageFolder('example', data_transforms['example'])
