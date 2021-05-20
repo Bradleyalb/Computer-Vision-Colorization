@@ -27,49 +27,57 @@ class colorization_model_zhang(nn.Module):
 
 		size = [64,128,256,512,512,512,512,256]
 		self.conv1 = nn.Sequential(
-			nn.Conv2d(in_channels=1, out_channels=size[0], kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(in_channels=1, out_channels=size[0], kernel_size=3, stride=1, padding=1,dilation=1),
 			nn.ReLU(),
-			nn.Conv2d(in_channels=size[0], out_channels=size[1], kernel_size=3, stride=2, padding=1),
+			nn.Conv2d(in_channels=size[0], out_channels=size[1], kernel_size=3, stride=2, padding=1,dilation=1),
 			nn.ReLU(),
 			nn.BatchNorm2d(size[1])
 		)
 
 		self.conv2 = nn.Sequential(
-			nn.Conv2d(in_channels=size[1], out_channels=size[1], kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(in_channels=size[1], out_channels=size[1], kernel_size=3, stride=1, padding=1,dilation=1),
 			nn.ReLU(),
-			nn.Conv2d(in_channels=size[1], out_channels=size[2], kernel_size=3, stride=2, padding=1),
+			nn.Conv2d(in_channels=size[1], out_channels=size[2], kernel_size=3, stride=2, padding=1,dilation=1),
 			nn.ReLU(),
 			nn.BatchNorm2d(size[2])
 		)
 
 		self.conv3 = nn.Sequential(
-			nn.Conv2d(in_channels=size[2], out_channels=size[2], kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(in_channels=size[2], out_channels=size[2], kernel_size=3, stride=1, padding=1,dilation=1),
 			nn.ReLU(),
-			nn.Conv2d(in_channels=size[2], out_channels=size[3], kernel_size=3, stride=2, padding=1),
+			nn.Conv2d(in_channels=size[2], out_channels=size[2], kernel_size=3, stride=1, padding=1,dilation=1),
+			nn.ReLU(),
+			nn.Conv2d(in_channels=size[2], out_channels=size[3], kernel_size=3, stride=2, padding=1,dilation=1),
 			nn.ReLU(),
 			nn.BatchNorm2d(size[3])
 		)
 
 		self.conv4 = nn.Sequential(
-			nn.Conv2d(in_channels=size[3], out_channels=size[3], kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(in_channels=size[3], out_channels=size[3], kernel_size=3, stride=1, padding=1,dilation=1),
 			nn.ReLU(),
-			nn.Conv2d(in_channels=size[3], out_channels=size[4], kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(in_channels=size[3], out_channels=size[3], kernel_size=3, stride=1, padding=1,dilation=1),
+			nn.ReLU(),
+			nn.Conv2d(in_channels=size[3], out_channels=size[4], kernel_size=3, stride=1, padding=1,dilation=1),
 			nn.ReLU(),
 			nn.BatchNorm2d(size[4])
 		)
 
 		self.conv5 = nn.Sequential(
-			nn.Conv2d(in_channels=size[4], out_channels=size[4], kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(in_channels=size[4], out_channels=size[4], kernel_size=3, stride=1, padding=2,dilation=2),
 			nn.ReLU(),
-			nn.Conv2d(in_channels=size[4], out_channels=size[5], kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(in_channels=size[4], out_channels=size[4], kernel_size=3, stride=1, padding=2,dilation=2),
+			nn.ReLU(),
+			nn.Conv2d(in_channels=size[4], out_channels=size[5], kernel_size=3, stride=1, padding=2,dilation=2),
 			nn.ReLU(),
 			nn.BatchNorm2d(size[5])
 		)
 
 		self.conv6 = nn.Sequential(
-			nn.Conv2d(in_channels=size[5], out_channels=size[5], kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(in_channels=size[5], out_channels=size[5], kernel_size=3, stride=1, padding=2,dilation=2),
 			nn.ReLU(),
-			nn.Conv2d(in_channels=size[5], out_channels=size[6], kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(in_channels=size[5], out_channels=size[5], kernel_size=3, stride=1, padding=2,dilation=2),
+			nn.ReLU(),
+			nn.Conv2d(in_channels=size[5], out_channels=size[6], kernel_size=3, stride=1, padding=2,dilation=2),
 			nn.ReLU(),
 			nn.BatchNorm2d(size[6]),
 			nn.Upsample(scale_factor=2)
